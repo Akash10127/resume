@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Portfolio with Photo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Color Palette */
+            --bg-main: #0a0a0a;       /* Deep black background */
+            --bg-secondary: #111111;  /* Slightly lighter section bg */
+            --text-primary: #ffffff;  /* Main text color */
+            --text-secondary: #a0a0a0; /* Subtitle/secondary text */
+            
+            /* Vibrant Gradient Accent */
+            --accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6); 
+            --accent-solid: #3b82f6; /* Solid fallback color */
+            
+            /* Effects */
+            --glass-bg: rgba(255, 255, 255, 0.05); /* For glassmorphism */
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --box-shadow: 0px 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s ease;
+        }
+
+        /* Global Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Reusable Components */
+        .container {
+            padding: 5rem 10%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+        }
+
+        /* Buttons with Gradient & Glow */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2.2rem;
+            background: var(--accent-gradient);
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+        }
+
+        .btn-outline {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            color: var(--accent-solid);
+            border: 2px solid var(--accent-solid);
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .btn-outline:hover {
+            background: var(--accent-solid);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        /* =====================
+           Navbar - Glass Effect
+        ===================== */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 10%;
+            background: rgba(10, 10, 10, 0.8); /* Semi-transparent */
+            backdrop-filter: blur(10px); /* CSS blurry glass effect */
+            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: var(--glass-border);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            font-size: 1.05rem;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        /* Animated Underline for Links */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--accent-gradient);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.8rem;
+        }
+
+        /* =====================
+           Hero Section (UPDATED WITH IMAGE)
+        ===================== */
+        .hero {
+            min-height: 92vh; /* Adjust for navbar height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 10%;
+            /* Subtle background pattern */
+            background-image: radial-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            overflow: hidden;
+        }
+
+        /* New Container for Side-by-Side Layout */
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 50/50 split */
+            align-items: center;
+            gap: 4rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .hero-text {
+            text-align: left;
+        }
+
+        .hero-text h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+
+        .accent-text {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            min-height: 1.7em;
+        }
+        
+        /* Typing cursor blinking */
+        .typing-text::after {
+            content: "|";
+            animation: blink 1s infinite;
+            color: var(--accent-solid);
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* ---- HERO IMAGE STYLING ---- */
+        .hero-image-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-img-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px; /* Adjust maximum size of image */
+            aspect-ratio: 1/1; /* Ensures it stays square */
+            z-index: 2;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures image fills square without distorting */
+            border-radius: 30px; /* Modern rounded corners */
+            border: 2px solid rgba(59, 130, 246, 0.3); /* Subtle blue border */
+            /* A cool glowing shadow behind it */
+            box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.4);
+            transition: var(--transition);
+        }
+
+        .hero-img:hover {
+            transform: scale(1.02);
+            border-color: var(--accent-solid);
+        }
+
+        /* Decorative glass element behind the image */
+        .hero-img-bg {
+            position: absolute;
+            top: 8%;
+            left: 8%;
+            width: 100%;
+            height: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px;
+            z-index: 1;
+            border: var(--glass-border);
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+        
+        .hero-image-wrapper:hover .hero-img-bg {
+             top: 12%;
+             left: 12%;
+        }
+
+
+        /* =====================
+           About Section
+        ===================== */
+        #about {
+            background-color: var(--bg-secondary);
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .skill-tag {
+            background: var(--glass-bg);
+            border: var(--glass-border);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .skill-tag:hover {
+            border-color: var(--accent-solid);
+            transform: translateY(-2px);
+        }
+
+        /* =====================
+           Projects Section - Glass Cards
+        ===================== */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: var(--glass-border);
+            padding: 2.5rem;
+            border-radius: 20px;
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-solid);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            /* Gradient icon */
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            flex-grow: 1; /* Ensures buttons align at the bottom */
+        }
+
+        /* =====================
+           Contact Section
+        ===================== */
+        #contact {
+            background-color: var(--bg-secondary);
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: var(--glass-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            border: var(--glass-border);
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        /* Styled Inputs */
+        .contact-form input, 
+        .contact-form textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+            resize: none; /* Disable textarea resize */
+        }
+
+        .contact-form input:focus, 
+        .contact-form textarea:focus {
+            border-color: var(--accent-solid);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        /* =====================
+           Footer
+        ===================== */
+        footer {
+            background: #050505;
+            text-align: center;
+            padding: 2rem;
+            border-top: var(--glass-border);
+            color: var(--text-secondary);
+        }
+
+        /* =====================
+           Mobile Responsiveness
+        ===================== */
+        @media (max-width: 992px) {
+            /* Stack hero section vertically on tablets/mobile */
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 3rem;
+            }
+
+            .hero-text h1 { font-size: 3rem; }
+            .hero-text { order: 2; } /* Text below image */
+            .hero-image-wrapper { order: 1; } /* Image on top */
+            
+            .hero-img-container {
+                max-width: 350px; /* Smaller image on mobile */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-text h1 { font-size: 2.5rem; }
+            .hero-text p { font-size: 1.2rem; }
+            .section-title { font-size: 2rem; }
+            .container { padding: 4rem 5%; }
+
+            /* Mobile Nav */
+            .hamburger { display: block; z-index: 1001;}
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%; /* Off-screen by default */
+                width: 70%;
+                height: 100vh;
+                background: rgba(10, 10, 10, 0.95);
+                backdrop-filter: blur(15px);
+                -webkit-backdrop-filter: blur(15px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: var(--transition);
+                z-index: 1000;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            }
+            .nav-links.active { right: 0; } /* Slide in */
+            .nav-links li { margin: 1.5rem 0; }
+            .nav-links a { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="#home" class="logo">Portfolio.</a>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-container">
+            
+            <div class="hero-text">
+                <h1>Hello, I'm <span class="accent-text">Akash yadav</span></h1>
+                <p>I am a <span class="typing-text"></span></p>
+                <a href="#projects" class="btn">View My Work</a>
+            </div>
+
+            <div class="hero-image-wrapper">
+                <div class="hero-img-bg"></div>
+                
+                <div class="hero-img-container">
+                    <img src="" alt="Akash yadav Profile Picture" class="hero-img">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="about" class="container">
+        <h2 class="section-title">About Me</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>I'm a passionate creative developer crafting modern, user-friendly web experiences. I love turning complex problems into simple, beautiful, and intuitive interface designs. My goal is to build digital products that are both functional and visually compelling.</p>
+            </div>
+            <div class="skills">
+                <span class="skill-tag">HTML5</span>
+                <span class="skill-tag">CSS3 / SCSS</span>
+                <span class="skill-tag">JavaScript (ES6+)</span>
+                <span class="skill-tag">React.js</span>
+                <span class="skill-tag">Node.js</span>
+                <span class="skill-tag">UI/UX Design</span>
+                <span class="skill-tag">Git & GitHub</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="container">
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="project-grid">
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-layer-group"></i></div>
+                <h3>SaaS Dashboard UI</h3>
+                <p>A modern analytics dashboard with dark mode, charts, and data visualization components built with React and Chart.js.</p>
+                <a href="#" class="btn-outline">View Project <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-shopping-bag"></i></div>
+                <h3>E-Commerce Platform</h3>
+                <p>A full-stack e-commerce application with product filtering, cart functionality, and Stripe payment integration.</p>
+                <a href="#" class="btn-outline">View Project <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-mobile-screen-button"></i></div>
+                <h3>Travel Companion App</h3>
+                <p>A mobile-first web app for discovering local attractions and planning itineraries using Google Maps API.</p>
+                <a href="#" class="btn-outline">View Project <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="container">
+        <h2 class="section-title">Get In Touch</h2>
+        <form class="contact-form">
+            <div class="form-group">
+                <input type="text" placeholder="Your Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" placeholder="Your Email" required>
+            </div>
+            <div class="form-group">
+                <textarea rows="5" placeholder="Your Message" required></textarea>
+            </div>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Alex Smith. Designed & Built with <i class="fas fa-heart" style="color: var(--accent-solid);"></i></p>
+    </footer>
+
+    <script>
+        // --- Mobile Menu Toggle ---
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        const links = document.querySelectorAll('.nav-links li');
+
+        hamburger.addEventListener('click', () => {
+            // Animate Links
+            navLinks.classList.toggle('active');
+            
+            // Hamburger Animation Toggle
+            hamburger.classList.toggle('toggle');
+            if(hamburger.querySelector('i').classList.contains('fa-bars')){
+                hamburger.querySelector('i').classList.replace('fa-bars', 'fa-times');
+            }else{
+                hamburger.querySelector('i').classList.replace('fa-times', 'fa-bars');
+            }
+        });
+
+        // Close menu when a link is clicked
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.querySelector('i').classList.replace('fa-times', 'fa-bars');
+            });
+        });
+
+        // --- Typing Effect ---
+        const textElement = document.querySelector('.typing-text');
+        // Add your own professions here
+        const words = ["Creative Developer.", "UI/UX Enthusiast.", "Problem Solver."];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        const typeEffect = () => {
+            const currentWord = words[wordIndex];
+            const currentChars = currentWord.substring(0, charIndex);
+            textElement.textContent = currentChars;
+
+            // Typing Speed
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex < currentWord.length) {
+                // If typing
+                charIndex++;
+            } else if (isDeleting && charIndex > 0) {
+                // If deleting
+                charIndex--;
+            } else {
+                // If word is complete
+                isDeleting = !isDeleting;
+                if (!isDeleting) {
+                    wordIndex = (wordIndex + 1) % words.length;
+                }
+                // Pause at end of word and before deleting starts
+                typeSpeed = isDeleting ? 1500 : 500;
+            }
+            setTimeout(typeEffect, typeSpeed);
+        }
+        // Initiate the effect
+        typeEffect();
+    </script>
+</body>
+</html>
